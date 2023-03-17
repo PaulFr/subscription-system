@@ -6,21 +6,18 @@ const TIMEOUT = parseInt(process.env.API_GATEWAY_TIMEOUT) || 5000; // 5 seconds 
 function handleError(error) {
   if (error.response) {
     return { status: error.response.status, data: error.response.data };
-  }
+  } 
   
-  if (error.request) {
-    const isTimeout = error.code === 'ECONNABORTED';
-    const message = isTimeout ? 'API Gateway request timed out' : 'API Gateway is not available';
-    const status = isTimeout ? 504 : 503;
-    return { status, data: { message } };
+  if (error.code === "ECONNABORTED") {
+    return { status: 504, data: { message: "API Gateway request timed out" } };
   }
 
-  return { status: 500, data: { message: 'An unknown error occurred' } };
+  return { status: 503, data: { message: "API Gateway is not available" } };
 }
 
-async function apiGatewayRequest(method, path, data, params) {
+async function apiGatewayRequest(method, path, data, params, axiosInstance = axios) {
   try {
-    const response = await axios({
+    const response = await axiosInstance({
       method: method,
       url: `${API_GATEWAY_URL}${path}`,
       data: data,
