@@ -23,6 +23,9 @@ async function apiGatewayRequest(method, path, data, params, axiosInstance = axi
       data: data,
       params: params,
       timeout: TIMEOUT,
+      headers:{
+        'X-API-KEY': process.env.API_KEY,
+      }
     });
     return { status: response.status, data: response.data };
   } catch (error) {
