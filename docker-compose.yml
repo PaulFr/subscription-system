@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  subscription-service:
+    build: ./subscription-service
+    ports:
+      - "3002:3002"
+    environment:
+      MONGODB_URI: mongodb://mongodb:27017/subscription-db
+      RABBITMQ_URL: amqp://rabbitmq:5672
+    depends_on:
+      - mongodb
+      - rabbitmq
