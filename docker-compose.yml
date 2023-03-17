@@ -13,6 +13,7 @@ services:
 
   subscription-service:
     build: ./subscription-service
+    container_name: subscription-service
     ports:
       - "3002:3002"
     environment:
@@ -21,3 +22,25 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+
+  api-gateway:
+    build: ./api-gateway
+    container_name: api-gateway
+    ports:
+      - '3030:3030'
+    depends_on:
+      - subscription-service
+    environment:
+      SUBSCRIPTION_SERVICE_URL: 'http://subscription-service:3002'
+      API_KEY: 'a7c311a2ecfa2db6270252411dac415535d3d4ccf8d8935abbdae563fe3bb693e85cde1be81f80296ec55cc65c64bd5325aa126849e9ac773038115cbdb1214c'
+
+  public-service:
+    build: ./public-service
+    container_name: public-service
+    ports:
+      - '3001:3001'
+    depends_on:
+      - api-gateway
+    environment:
+      API_GATEWAY_URL: 'http://api-gateway:3030'
+      API_KEY: 'a7c311a2ecfa2db6270252411dac415535d3d4ccf8d8935abbdae563fe3bb693e85cde1be81f80296ec55cc65c64bd5325aa126849e9ac773038115cbdb1214c'
