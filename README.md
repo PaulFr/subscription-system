@@ -8,6 +8,7 @@ A scalable and secure subscription system built with Node.js, Express, and micro
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Running the Project](#running-the-project)
+- [Tools](#tools)
 - [Architecture Overview](#architecture-overview)
 - [Security](#security)
 - [Potential Service Level Agreements Implementation](#potential-service-level-agreements-implementation)
@@ -69,20 +70,39 @@ To test the subscription system, you can send a POST request to the Public Servi
   "gender": "male",
   "dateOfBirth": "1990-01-01",
   "consent": true,
-  "newsletterId": 1
+  "newsletterId": "abc1"
 }
 ```
 
 To send the POST request using the curl command, open your terminal and run the following command:
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"email":"john.doe@example.com","firstName":"John","gender":"male","dateOfBirth":"1990-01-01","consent":true,"newsletterId":1}' http://localhost:3001/subscription
+curl -X POST -H "Content-Type: application/json" -d '{"email":"john.doe@example.com","firstName":"John","gender":"male","dateOfBirth":"1990-01-01","consent":true,"newsletterId":"abc1"}' http://localhost:3001/subscription
 ```
 
 If the request is successful, you should receive a response with a status code of `201 Created` and a JSON payload containing the newly created subscription's ID. Make sure to have the Public Service and other necessary microservices running before performing the test.
 
+## Tools
+In the development of the subscription system, I have used several meaningful frameworks and libraries to streamline the development process and improve the overall quality and maintainability of the codebase.
+
+1. *Express.js*: A popular Node.js web application framework used for building the API for the microservices. I chose Express.js due to its flexibility, performance, and ease of use, as well as its vast ecosystem of middleware to handle various tasks like routing, request parsing, and error handling.
+2. *Mongoose*: A library for MongoDB that provides a higher level of abstraction for working with the database. It simplifies schema definition, validation, and querying, helping me to manage the subscription data more efficiently and in a more structured manner.
+3. *Axios*: A popular HTTP client for Node.js and browsers, used in the public service and API gateway to make requests to the subscription service. Axios was chosen for its ease of use, promise-based API, and the ability to intercept requests and responses, which allows me to add authentication headers and handle errors more effectively.
+4. *RabbitMQ*: A message broker that implements the Advanced Message Queuing Protocol (AMQP). I use RabbitMQ to handle communication between the microservices, specifically for sending email notifications. It provides a reliable, scalable, and robust solution for decoupling and distributing workloads.
+5. *MongoDB* Memory Server: A utility that allows running an in-memory MongoDB server for testing purposes. It is used to isolate the tests from external dependencies and provide a faster and more predictable testing environment.
+6. *Docker*: A containerization platform used to package and distribute the microservices, ensuring consistent execution environments and easier deployment. Docker enables me to manage the dependencies and configurations for each microservice, making the system more maintainable and scalable.
+7. *Jest*: A testing framework used for writing and running unit and integration tests for the microservices. Jest provides a comprehensive and easy-to-use API for creating and executing tests, which helps to improve the overall quality and reliability of the system.
+8. *body-parser*: A middleware for Express.js that parses incoming request bodies, making it easy to work with JSON payloads in the API endpoints. This library streamlines the process of handling request data and ensures proper formatting.
+9. *dotenv*: A library that enables loading environment variables from a .env file into the Node.js application. It simplifies the management of environment-specific configurations, helping to keep sensitive information, such as API keys and database credentials, secure and separate from the codebase.
+10. *supertest*: A testing library for testing HTTP endpoints, used in conjunction with Jest for the integration tests. It provides an easy-to-use API for making requests to the microservices, verifying responses, and asserting expected behaviors.
+11. *amqplib*: A library for working with AMQP-based message brokers like RabbitMQ. It provides an easy-to-use API for connecting, sending, and receiving messages, which is essential for the email notification system.
+12. *Swagger*: A powerful tool for documenting, designing, and testing APIs. I use Swagger to generate interactive API documentation for the public service, making it easier for developers to understand and test the API endpoints.
+13. *CORS*: A middleware for Express.js that enables Cross-Origin Resource Sharing (CORS) on the API, allowing the frontend to make requests to the API from different origins. This is essential for providing a seamless user experience in a web application.
+14. *express-validator*: A set of Express.js middleware for validating and sanitizing request data. I use express-validator to ensure that the data received by the API is valid and secure before forwarding it to the subscription service.
+
+ Each of these libraries and tools plays a crucial role in achieving specific goals, such as handling requests, validating data, enabling communication between microservices, and testing the application effectively.
 ## Architecture Overview
 
-The subscription system is designed as a microservices architecture, composed of three interconnected microservices that work together to provide a seamless user experience:
+The subscription system is designed as a microservices architecture, composed of four interconnected microservices that work together to provide a seamless user experience:
 
 1. Public Service: This is the Backend for Frontend (BFF) microservice that serves as the primary point of interaction for the UI frontend. It is responsible for forwarding requests to the appropriate microservices, handling data validation, and securing access to the system. The public service is deployed within the public network zone, making it accessible to end-users and clients.
 
@@ -118,7 +138,7 @@ By focusing on these aspects and continuously monitoring and optimizing the serv
 
 ## API Documentation
 
-API documentation can be found [on the public service](localhost:3001/api-docs/). Swagger is used for API documentation.
+API documentation can be found on the public service `localhost:3001/api-docs/`. Swagger is used for API documentation.
 
 ## Testing
 
