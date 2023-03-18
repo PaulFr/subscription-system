@@ -2,11 +2,15 @@ version: '3.8'
 services:
   mongodb:
     image: mongo
+    networks:
+      - private_network
     ports:
       - "27017:27017"
 
   rabbitmq:
     image: rabbitmq:3-management
+    networks:
+      - private_network
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -14,6 +18,8 @@ services:
   subscription-service:
     build: ./subscription-service
     container_name: subscription-service
+    networks:
+      - private_network
     ports:
       - "3002:3002"
     environment:
@@ -26,6 +32,9 @@ services:
   api-gateway:
     build: ./api-gateway
     container_name: api-gateway
+    networks:
+      - public_network
+      - private_network
     ports:
       - '3030:3030'
     depends_on:
@@ -37,6 +46,8 @@ services:
   public-service:
     build: ./public-service
     container_name: public-service
+    networks:
+      - public_network
     ports:
       - '3001:3001'
     depends_on:
@@ -48,7 +59,23 @@ services:
   email-service:
     build: ./email-service
     container_name: email-service
+    networks:
+      - private_network
     depends_on:
       - rabbitmq
     environment:
       RABBITMQ_URL: amqp://rabbitmq:5672
+
+networks:
+  private_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.13.0.0/24
+  public_network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 173.18.0.0/24
