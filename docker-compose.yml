@@ -44,3 +44,11 @@ services:
     environment:
       API_GATEWAY_URL: 'http://api-gateway:3030'
       API_KEY: 'a7c311a2ecfa2db6270252411dac415535d3d4ccf8d8935abbdae563fe3bb693e85cde1be81f80296ec55cc65c64bd5325aa126849e9ac773038115cbdb1214c'
+
+  email-service:
+    build: ./email-service
+    container_name: email-service
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_URL: amqp://rabbitmq:5672
