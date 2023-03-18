@@ -14,7 +14,7 @@ A scalable and secure subscription system built with Node.js, Express, and micro
 - [API Documentation](#api-documentation)
 - [Testing](#testing)
 - [Deployment](#deployment)
-- [CI/CD Pipeline Implementation Proposition](#ci-cd-pipeline-implementation-proposition)
+- [CI/CD Pipeline Implementation Proposition](#cicd-pipeline-implementation-proposition)
 - [Using Kubernetes](#using-kubernetes)
 
 ## Getting Started
@@ -56,7 +56,29 @@ These instructions will help you get the project up and running on your local ma
 ```docker-compose up --build```
 
 
-2. The application should now be running on the specified ports. You can test the endpoints using a REST client like Postman or curl.
+2. The application should now be running on the specified ports. 
+
+It's important to note that RabbitMQ, which is a core component of our subscription system, may take some time to start up. When running the `docker-compose up --build` command, it's recommended to wait for about 20 seconds before attempting to interact with the microservices that depend on RabbitMQ. This will ensure that RabbitMQ has enough time to initialize and become available, allowing the connected microservices to be available and ready to treat your requests. 
+
+To test the subscription system, you can send a POST request to the Public Service running on `localhost:3001/subscription`. Use an HTTP client such as Postman, Insomnia, or a simple curl command in your terminal to make the request. Here's an example of a valid payload:
+
+```json
+{
+  "email": "john.doe@example.com",
+  "firstName": "John",
+  "gender": "male",
+  "dateOfBirth": "1990-01-01",
+  "consent": true,
+  "newsletterId": 1
+}
+```
+
+To send the POST request using the curl command, open your terminal and run the following command:
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"email":"john.doe@example.com","firstName":"John","gender":"male","dateOfBirth":"1990-01-01","consent":true,"newsletterId":1}' http://localhost:3001/subscription
+```
+
+If the request is successful, you should receive a response with a status code of `201 Created` and a JSON payload containing the newly created subscription's ID. Make sure to have the Public Service and other necessary microservices running before performing the test.
 
 ## Architecture Overview
 
@@ -110,12 +132,6 @@ This project uses Jest for testing.
 ## Deployment
 
 This project is containerized using Docker and can be deployed to any container orchestration platform that supports Docker, such as Kubernetes or Amazon ECS.
-
-You can use docker compose to run the project :
-```sh
-docker-compose up --build
-```
-
 
 ## CI/CD Pipeline Implementation Proposition
 
