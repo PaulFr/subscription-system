@@ -16,7 +16,7 @@ app.use(authMiddleware);
 app.use('/subscription', subscriptionRoutes);
 
 
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).json({ error: 'This service does not exist' });
 });
 

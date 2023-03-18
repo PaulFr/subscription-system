@@ -20,7 +20,7 @@ dotenv.config();
 
     app.use(bodyParser.json());
     app.use(createSubscriptionRoutes(channel));
-
+    
     const port = process.env.PORT || 3002;
 
     app.listen(port, () => {
